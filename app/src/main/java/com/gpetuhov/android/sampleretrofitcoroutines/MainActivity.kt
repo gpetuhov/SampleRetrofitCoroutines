@@ -20,10 +20,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Start coroutine on a background thread
         launch {
+            // Create service
             val myService = retrofit.create(MyService::class.java)
+
+            // Wait for the result of the network call with Deferred.await()
             val result = myService.getResponse().await()
 
+            // Use result on the main thread
             launch(UI) {
                 textView.text = result.string()
             }
